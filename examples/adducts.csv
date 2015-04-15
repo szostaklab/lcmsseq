@@ -1,0 +1,10 @@
+# Adducts database
+# Format:
+# "name",exact adduct mass,enable/disable logical
+"zilch",0.0000,1
+"H2O",18.0106,1
+"Na-H",21.9819,1
+"K-H",37.9558824668,1
+"Cl",34.969402,1
+"FA",46.00602604,1
+"CO",27.99492,1
