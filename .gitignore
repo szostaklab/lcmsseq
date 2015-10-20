@@ -1,0 +1,9 @@
+.idea
+/oldfiles
+/paperfigs
+lcmsseq/__pycache__
+!/lcmsseq
+!/examples
+!/README.md
+!/setup.py
+!/LICENSE
