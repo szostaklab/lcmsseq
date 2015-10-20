@@ -20,7 +20,7 @@ This is a python 3 package!
 
 ## Short version
 
-Change to the directory where you've unzipped this file.  In Debian/Ubuntu Linux, do:
+Clone this repository.  Then, in Debian/Ubuntu Linux, do:
 
     $ sudo pip3 install numpy matplotlib pandas scipy patsy statsmodels
     ...
