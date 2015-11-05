@@ -706,15 +706,7 @@ def align(reads):
     try:
         with open(fname, 'w') as f:
             f.write(fasta)
-
-        # Attempted sloppy fix for race condition in Windows
-        test = None
-        tries = 0
-        while test != fasta and tries < 100:
-            tries += 1
-            with open(fname, 'r') as f:
-                test = f.read()
-
+            os.fsync(f) # Attempted fix for race condition in Windows
     except IOError:
         print('Error: Writing reads to fasta file failed.')
         return None
