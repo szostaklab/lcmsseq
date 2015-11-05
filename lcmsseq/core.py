@@ -63,6 +63,7 @@ except NotImplementedError:
         MAXTHREADS_ = 4
 
 # Global options
+CLUSTALO_BINARY = 'clustalo'
 PARAMS_SET_ = False
 PARAMS_ = {
 
@@ -119,7 +120,7 @@ PARAMS_ = {
 
 # Check for clustalo executable in path
 # TODO: link against libclustalo instead of using the executable binary!
-assert which('clustalo', mode=os.X_OK), 'Error: clustalo binary not found in path or inaccessible.'
+assert which(CLUSTALO_BINARY, mode=os.X_OK), 'Error: clustalo binary not found in path or inaccessible.'
 
 def read_params(cfgfilename):
     """
@@ -703,9 +704,17 @@ def align(reads):
 
     # spit out fasta formatted reads
     try:
-        f = open(fname, 'w')
-        f.write(fasta)
-        f.close()
+        with open(fname, 'w') as f:
+            f.write(fasta)
+
+        # Attempted sloppy fix for race condition in Windows
+        test = None
+        tries = 0
+        while test != fasta and tries < 100:
+            tries += 1
+            with open(fname, 'r') as f:
+                test = f.read()
+
     except IOError:
         print('Error: Writing reads to fasta file failed.')
         return None
@@ -714,13 +723,13 @@ def align(reads):
         raise
 
     try:
-        sout = call('clustalo -i ' + fname + ' -o aligned.fasta --force -t rna', shell=True, stderr=sys.stdout)
+        sout = call(CLUSTALO_BINARY + ' -i ' + fname + ' -o aligned.fasta --force -t rna', shell=True, stderr=sys.stdout)
     except IOError:
         print('Error: ClustalO failed.')
         return None
     except:
         print('Error: ClustalO failed.')
-        raise
+        return None
 
     #read back alignment from file
     alignment = []
