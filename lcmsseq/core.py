@@ -38,6 +38,7 @@ __author__ = 'lelyveld'
 import sys
 assert sys.version_info.major >= 3, 'Error: this package requires Python 3.'
 
+from time import sleep
 import numpy as np
 import os
 from shutil import which
@@ -706,7 +707,8 @@ def align(reads):
     try:
         with open(fname, 'w') as f:
             f.write(fasta)
-            os.fsync(f) # Attempted fix for race condition in Windows
+            f.flush()
+            os.fsync(f.fileno()) # Attempted fix for race condition in Windows
     except IOError:
         print('Error: Writing reads to fasta file failed.')
         return None
@@ -714,8 +716,11 @@ def align(reads):
         print('Error: Writing reads to fasta file failed.')
         raise
 
+    if os.name == 'nt':
+        sleep(5) # Attempted fix for race condition in Windows
+
     try:
-        sout = call(CLUSTALO_BINARY + ' -i ' + fname + ' -o aligned.fasta --force -t rna', shell=True, stderr=sys.stdout)
+        sout = call([CLUSTALO_BINARY,'-i',fname,'-o','aligned.fasta','--force','-t','rna'], shell=False, stderr=sys.stdout)
     except IOError:
         print('Error: ClustalO failed.')
         return None
