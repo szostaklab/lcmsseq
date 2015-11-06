@@ -17,9 +17,9 @@ fig3b = 'fig3b.csv'
 lcmsseq.read_params('default.cfg')
 lcmsseq.process(fig3b)
 
-#walk at 5 ppm
+#walk at 5 ppm and allow 7 min step for correct orientation
 fig3c = 'fig3c.csv'
-lcmsseq.read_params('default.cfg')
+lcmsseq.read_params('fig3c.cfg')
 lcmsseq.process(fig3c)
 
 #RT peak width factor at 5 to capture CO adduct
